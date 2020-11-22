@@ -1,0 +1,44 @@
+{
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "angular",
+        "releaseRules": [
+          { "type": "build", "scope": "deps", "release": "patch" }
+        ]
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/npm",
+    [
+      "@semantic-release/git",
+      {
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
+        "publish": false
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "bin/ttu-slideshow-backend.bin",
+            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-linux-amd64",
+            "label": "Linux"
+          },
+          {
+            "path": "bin/ttu-slideshow-backend",
+            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-macos.bin",
+            "label": "macOS"
+          },
+          {
+            "path": "bin/ttu-slideshow-backend.exe",
+            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-win-amd64.exe",
+            "label": "Windows"
+          }
+        ]
+      }
+    ]
+  ]
+}

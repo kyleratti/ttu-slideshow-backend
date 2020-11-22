@@ -1,7 +1,5 @@
 import express from "express";
-import fs from "fs";
 import http from "http";
-import { resolve } from "path";
 import WebSocket from "ws";
 import { MessageType, SocketMessage } from "./structures";
 
@@ -11,6 +9,11 @@ export class WebServer {
   private server: http.Server;
   private wss: WebSocket.Server;
   private images: string[] = [];
+  private watchDir: string;
+
+  constructor(watchDir: string) {
+    this.watchDir = watchDir;
+  }
 
   private removeImage(image: string) {
     const index = this.images.indexOf(image);
@@ -28,19 +31,15 @@ export class WebServer {
       this.removeImage(image);
     }
 
-    return this.broadcast({
-      type: MessageType.DeleteImage,
-      data: image,
-    });
+    return this.broadcast({ type: MessageType.Full, data: this.images });
   }
 
   sendImageAdded(image: string) {
+    if (this.images.includes(image)) return;
+
     this.images.push(image);
 
-    return this.broadcast({
-      type: MessageType.NewImage,
-      data: image,
-    });
+    return this.broadcast({ type: MessageType.Full, data: this.images });
   }
 
   sendAll(ws: WebSocket) {
@@ -53,28 +52,14 @@ export class WebServer {
   }
 
   start() {
-    this.app.use("/img/", express.static(process.env.WATCH_DIR));
-
-    const packagesDir = resolve(process.env.PACKAGES_DIR);
-
-    if (!packagesDir) throw `Environment variable PACKAGES_DIR is not set`;
-
-    if (!fs.existsSync(packagesDir))
-      throw `PACKAGES_DIR does not exist!! ${packagesDir}`;
-
-    const distDir = resolve(packagesDir, "ttu-slideshow-frontend/dist/");
-
-    if (!fs.existsSync(distDir))
-      throw `Production frontend not found (do you need to run install/update?): ${distDir}`;
-
-    console.log(`Production detected; serving '${distDir}'`);
-    this.app.use("/", express.static(distDir));
+    this.app.use("/img/", express.static(this.watchDir));
 
     let server = http.createServer(this.app);
     this.server = server;
     this.wss = new WebSocket.Server({ server });
 
-    this.wss.on("connection", (ws) => {
+    this.wss.on("connection", (ws, req) => {
+      console.log(`Client connected`, { req });
       this.sendAll(ws);
     });
 
@@ -86,10 +71,13 @@ export class WebServer {
       console.log(
         `Listening for HTTP requests on http://127.0.0.1:${this.port}`
       );
-      console.log(`Open this address in your web browser`);
 
-      console.log(
-        `NOTE: Server is only listening for HTTP requests, _NOT_ HTTPS`
+      console.log(`Watch Folder: ${this.watchDir}/`);
+
+      console.warn("NOTE: _ONLY_ .jpg files will be detected");
+
+      console.warn(
+        "NOTE: Server is only listening for HTTP requests, _NOT_ HTTPS"
       );
     });
   }

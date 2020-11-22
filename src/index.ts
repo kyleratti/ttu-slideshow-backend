@@ -7,7 +7,7 @@ dotenv.config();
 
 const watchDir = String(process.env.WATCH_DIR);
 
-export const webServer = new WebServer();
+export const webServer = new WebServer(watchDir);
 export const watcher = new Watcher(watchDir);
 
 function run() {

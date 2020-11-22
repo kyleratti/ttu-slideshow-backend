@@ -24,9 +24,9 @@ jobs:
       - name: Package
         if: github.ref == 'refs/heads/master'
         run: |
-          - npm run package:linux
-          - npm run package:macos
-          - npm run package:windows
+          npm run package:linux
+          npm run package:macos
+          npm run package:windows
       - name: Release
         if: github.ref == 'refs/heads/master'
         env:

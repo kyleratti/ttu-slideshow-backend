@@ -13,7 +13,7 @@
     [
       "@semantic-release/npm",
       {
-        "publish": false
+        "npmPublish": false
       }
     ],
     [
@@ -40,6 +40,10 @@
             "path": "bin/ttu-slideshow-backend.exe",
             "name": "ttu-slideshow-backend-<%- nextRelease.version %>-win-amd64.exe",
             "label": "Windows"
+          },
+          {
+            "path": "config.example.json",
+            "label": "Example Config File"
           }
         ]
       }

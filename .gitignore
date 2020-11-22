@@ -59,9 +59,9 @@ typings/
 
 # next.js build output
 .next
-<<<<<<< HEAD
 
 dts/
 lib/
-=======
->>>>>>> 59bec97... deps: update dependencies
+bin/
+config.json
+

@@ -1,14 +1,21 @@
-import dotenv from "dotenv";
 import fs from "fs";
+import path from "path";
+import { Config } from "./config";
 import { Watcher } from "./watchers";
 import { WebServer } from "./webserver";
 
-dotenv.config();
+export const config = new Config();
+config.load();
 
-const watchDir = String(process.env.WATCH_DIR);
+let watchDir = config.getValue<string>("watchDir");
 
-export const webServer = new WebServer(watchDir);
-export const watcher = new Watcher(watchDir);
+if (!fs.existsSync(watchDir))
+  throw `Unable to watch directory (does not exist or no access): ${watchDir}`;
+
+watchDir = path.resolve(watchDir);
+
+export const webServer = new WebServer();
+const watcher = new Watcher();
 
 function run() {
   try {
@@ -17,11 +24,7 @@ function run() {
     throw `Fatal error starting webserver: ${e}`;
   }
 
-  if (fs.existsSync(watchDir)) {
-    watcher.start();
-  } else {
-    throw `Unable to watch directory (not found): ${watchDir}`;
-  }
+  watcher.start();
 }
 
 run();

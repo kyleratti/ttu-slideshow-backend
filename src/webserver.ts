@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import WebSocket from "ws";
+import { config } from ".";
 import { MessageType, SocketMessage } from "./structures";
 
 export class WebServer {
@@ -11,8 +12,8 @@ export class WebServer {
   private images: string[] = [];
   private watchDir: string;
 
-  constructor(watchDir: string) {
-    this.watchDir = watchDir;
+  constructor() {
+    this.watchDir = config.getValue<string>("watchDir");
   }
 
   private removeImage(image: string) {

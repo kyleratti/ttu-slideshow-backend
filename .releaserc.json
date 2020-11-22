@@ -28,22 +28,18 @@
         "assets": [
           {
             "path": "bin/ttu-slideshow-backend.bin",
-            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-linux-amd64",
-            "label": "Linux"
+            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-linux-amd64"
           },
           {
             "path": "bin/ttu-slideshow-backend",
-            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-macos.bin",
-            "label": "macOS"
+            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-macos.bin"
           },
           {
             "path": "bin/ttu-slideshow-backend.exe",
-            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-win-amd64.exe",
-            "label": "Windows"
+            "name": "ttu-slideshow-backend-<%- nextRelease.version %>-win-amd64.exe"
           },
           {
-            "path": "config.example.json",
-            "label": "Example Config File"
+            "path": "config.example.json"
           }
         ]
       }
